@@ -47,5 +47,4 @@ Junior Developer / IT Support
 
 • Contribuidores:
 
-Bruno Chirico 
-- Backend Developer
+Bruno Chirico - Backend Developer
