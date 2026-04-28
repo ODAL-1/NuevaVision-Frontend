@@ -1,0 +1,32 @@
+aside {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  height: 100%;
+  background-color: #ffffff;
+
+  a {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    padding: 15px 0 15px 0;
+    border: none;
+    color: #5d7285;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 17px;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.1s ease-out, color 0.1s ease-out;
+
+    svg {
+      margin: 0 10px 0 25px;
+    }
+
+    &:hover {
+      background-color: #f38282;
+      color: #ffffff;
+    }
+  }
+}

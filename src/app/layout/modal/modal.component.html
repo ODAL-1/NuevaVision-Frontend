@@ -1,0 +1,14 @@
+@if (showModal) {
+<div class="modal">
+    <div class="modal__content">
+        <div class="modal__content__text">
+            <h2>{{ title }}</h2>
+            <p>{{ message }}</p>
+        </div>
+        <div class="modal__content__actions">
+            <button (click)="cancel()">{{ cancelText }}</button>
+            <button (click)="confirm()">{{ confirmText }}</button>
+        </div>
+    </div>
+</div>
+}

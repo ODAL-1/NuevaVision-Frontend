@@ -1,0 +1,590 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ============================================================
+   Design tokens
+   3 neutrals + 1 primary + 1 accent (focus ring)
+   ============================================================ */
+$bg:           #f1f5f9;   // page background (slate-100)
+$card:         #ffffff;   // cards
+$border:       #e2e8f0;   // hairlines (slate-200)
+$border-strong:#cbd5e1;   // hover borders (slate-300)
+
+$text:         #0f172a;   // headings (slate-900)
+$text-body:    #334155;   // body (slate-700)
+$text-muted:   #64748b;   // muted (slate-500)
+$text-subtle:  #94a3b8;   // very muted (slate-400)
+
+$primary:      #0f172a;   // brand (deep slate)
+$primary-hover:#1e293b;
+$accent:       #2563eb;   // focus ring (blue-600)
+$accent-soft:  rgba(37, 99, 235, 0.12);
+
+$radius-sm: 6px;
+$radius:    10px;
+$radius-lg: 14px;
+
+$shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+$shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+$shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06), 0 2px 4px rgba(15, 23, 42, 0.04);
+
+/* ============================================================
+   Page
+   ============================================================ */
+:host {
+  display: block;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: $text-body;
+  background: $bg;
+  min-height: 100vh;
+}
+
+.page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+
+  @media (max-width: 640px) {
+    padding: 20px 16px 40px;
+  }
+}
+
+/* ============================================================
+   Page header
+   ============================================================ */
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+
+  &__crumb {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: $text-muted;
+    margin-bottom: 8px;
+
+    .is-current { color: $text; font-weight: 600; }
+    svg { color: $text-subtle; }
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: $text;
+    line-height: 1.2;
+  }
+
+  &__subtitle {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: $text-muted;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+}
+
+/* ============================================================
+   Grid layout
+   ============================================================ */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   Card
+   ============================================================ */
+.card {
+  background: $card;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-xs;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+  &:hover { box-shadow: $shadow-sm; }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    border-bottom: 1px solid $border;
+  }
+
+  &__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: $bg;
+    color: $text;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: $text;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  &__subtitle {
+    margin: 2px 0 0;
+    font-size: 12.5px;
+    color: $text-muted;
+  }
+
+  &__body {
+    padding: 20px;
+  }
+}
+
+/* Counter badge */
+.badge {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: $bg;
+  color: $text-body;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid $border;
+}
+
+/* ============================================================
+   Form fields
+   ============================================================ */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+
+  @media (max-width: 520px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+
+  &--full { grid-column: 1 / -1; }
+  &--inline { flex-direction: row; align-items: center; gap: 8px; }
+  &--grow { flex: 1 1 auto; min-width: 160px; }
+
+  label {
+    font-size: 12px;
+    font-weight: 500;
+    color: $text-body;
+    letter-spacing: 0;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  textarea,
+  select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 9px 12px;
+    border: 1px solid $border;
+    border-radius: $radius;
+    background: $card;
+    color: $text;
+    font: inherit;
+    font-size: 13.5px;
+    line-height: 1.4;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+
+    &::placeholder { color: $text-subtle; }
+
+    &:hover { border-color: $border-strong; }
+
+    &:focus {
+      outline: none;
+      border-color: $accent;
+      box-shadow: 0 0 0 3px $accent-soft;
+    }
+  }
+
+  textarea {
+    min-height: 84px;
+    resize: vertical;
+  }
+}
+
+/* Custom select wrapper */
+.select {
+  position: relative;
+  display: block;
+
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+
+  svg {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $text-muted;
+    pointer-events: none;
+  }
+
+  &--sm select {
+    padding: 6px 28px 6px 10px;
+    font-size: 12.5px;
+  }
+  &--sm svg {
+    right: 8px;
+  }
+}
+
+/* Input with currency / prefix */
+.input-prefix {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  border: 1px solid $border;
+  border-radius: $radius;
+  background: $card;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover { border-color: $border-strong; }
+  &:focus-within {
+    border-color: $accent;
+    box-shadow: 0 0 0 3px $accent-soft;
+  }
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 10px 0 12px;
+    color: $text-muted;
+    font-weight: 600;
+    font-size: 13.5px;
+    border-right: 1px solid $border;
+    background: $bg;
+    border-top-left-radius: $radius;
+    border-bottom-left-radius: $radius;
+  }
+
+  input {
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 $radius $radius 0 !important;
+    background: transparent !important;
+  }
+
+  &--lg {
+    span { font-size: 16px; padding: 0 12px 0 16px; }
+    input { font-size: 18px !important; font-weight: 600; padding: 12px 14px !important; color: $text !important; }
+  }
+}
+
+.total-field label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $text-muted;
+  font-weight: 600;
+}
+
+/* ============================================================
+   Prescription table (Tipo de venta)
+   ============================================================ */
+.rx {
+  border: 1px solid $border;
+  border-radius: $radius;
+  overflow: hidden;
+  background: $card;
+
+  &__head,
+  &__row {
+    display: grid;
+    grid-template-columns: 64px 1fr 1fr;
+    align-items: center;
+  }
+
+  &__head {
+    background: $bg;
+    border-bottom: 1px solid $border;
+
+    span {
+      padding: 10px 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: $text-muted;
+      text-align: center;
+
+      &:first-child { border-right: 1px solid $border; }
+      &:nth-child(2) { border-right: 1px solid $border; }
+    }
+  }
+
+  &__row {
+    border-bottom: 1px solid $border;
+
+    &:last-child { border-bottom: none; }
+
+    &:hover { background: rgba(241, 245, 249, 0.5); }
+  }
+
+  &__label {
+    padding: 0 12px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: $text;
+    text-align: center;
+    border-right: 1px solid $border;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $bg;
+  }
+
+  &__row input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 10px 12px;
+    background: transparent;
+    font: inherit;
+    font-size: 13px;
+    color: $text;
+    text-align: center;
+    border-right: 1px solid $border;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+
+    &:last-child { border-right: none; }
+
+    &:focus {
+      background: $accent-soft;
+      box-shadow: inset 0 0 0 2px $accent;
+    }
+
+    &::placeholder { color: $text-subtle; }
+  }
+}
+
+.rx-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 14px;
+  background: $bg;
+  border: 1px solid $border;
+  border-radius: $radius;
+
+  .field--inline label {
+    font-size: 12px;
+    color: $text-body;
+    margin: 0;
+    white-space: nowrap;
+  }
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: $radius;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.05s ease;
+  white-space: nowrap;
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px $accent-soft;
+  }
+
+  &:active { transform: translateY(1px); }
+
+  &--primary {
+    background: $primary;
+    color: #fff;
+    border-color: $primary;
+
+    &:hover { background: $primary-hover; border-color: $primary-hover; }
+  }
+
+  &--ghost {
+    background: transparent;
+    color: $text-body;
+    border-color: $border;
+
+    &:hover {
+      background: $bg;
+      color: $text;
+      border-color: $border-strong;
+    }
+  }
+
+  &--sm {
+    padding: 8px 12px;
+    font-size: 12.5px;
+  }
+}
+
+/* Footer actions inside card */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid $border;
+}
+
+/* ============================================================
+   Article list
+   ============================================================ */
+.btn-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 16px;
+  background: $card;
+  color: $text-body;
+  border: 1.5px dashed $border-strong;
+  border-radius: $radius;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    background: $bg;
+    color: $text;
+    border-color: $text-muted;
+  }
+}
+
+.empty {
+  text-align: center;
+  padding: 28px 16px 8px;
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: $bg;
+    color: $text-muted;
+    margin-bottom: 12px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: $text;
+  }
+
+  &__text {
+    margin: 4px auto 0;
+    font-size: 13px;
+    color: $text-muted;
+    max-width: 320px;
+    line-height: 1.5;
+  }
+}
+
+.articles {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  border: 1px solid $border;
+  border-radius: $radius;
+  overflow: hidden;
+
+  &__item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 14px;
+    border-bottom: 1px solid $border;
+    background: $card;
+
+    &:last-child { border-bottom: none; }
+    &:hover { background: $bg; }
+  }
+
+  &__name {
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: $text;
+  }
+
+  &__detail {
+    margin: 2px 0 0;
+    font-size: 12.5px;
+    color: $text-muted;
+  }
+
+  &__qty {
+    font-size: 12.5px;
+    color: $text-muted;
+    font-weight: 500;
+  }
+
+  &__price {
+    font-size: 14px;
+    font-weight: 700;
+    color: $text;
+    font-variant-numeric: tabular-nums;
+  }
+}

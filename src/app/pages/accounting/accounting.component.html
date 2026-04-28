@@ -1,0 +1,208 @@
+<section class="page" aria-labelledby="accounting-title">
+  <header class="page__head">
+    <div class="page__heading">
+      <nav class="crumb" aria-label="Breadcrumb">
+        <span>Inicio</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m9 18 6-6-6-6"/>
+        </svg>
+        <span>Finanzas</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m9 18 6-6-6-6"/>
+        </svg>
+        <span class="is-active">Contabilidad</span>
+      </nav>
+
+      <h1 id="accounting-title" class="page__title">Contabilidad</h1>
+      <p class="page__subtitle">Controlá ingresos, egresos y el resultado del período en un solo lugar.</p>
+    </div>
+
+    <div class="page__actions">
+      <button type="button" class="btn btn--ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        <span>Exportar libro</span>
+      </button>
+      <button type="button" class="btn btn--primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        <span>Nuevo movimiento</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="kpis" aria-label="Resumen del período">
+    <article class="kpi" *ngFor="let k of kpis">
+      <span class="kpi__label">{{ k.label }}</span>
+      <strong class="kpi__value">{{ formatMoney(k.value) }}</strong>
+      <div class="kpi__meta">
+        <span class="kpi__delta"
+              [class.is-up]="k.trend === 'up'"
+              [class.is-down]="k.trend === 'down'">
+          <svg *ngIf="k.trend === 'up'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="7 17 17 7"/>
+            <polyline points="9 7 17 7 17 15"/>
+          </svg>
+          <svg *ngIf="k.trend === 'down'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="7 7 17 17"/>
+            <polyline points="17 9 17 17 9 17"/>
+          </svg>
+          {{ k.delta }}
+        </span>
+        <span class="kpi__hint">{{ k.hint }}</span>
+      </div>
+    </article>
+  </section>
+
+  <article class="card balance">
+    <header class="card__head">
+      <span class="card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="20" x2="12" y2="10"/>
+          <line x1="18" y1="20" x2="18" y2="4"/>
+          <line x1="6"  y1="20" x2="6"  y2="14"/>
+        </svg>
+      </span>
+      <div class="card__heading">
+        <h2 class="card__title">Balance del período</h2>
+        <p class="card__subtitle">Comparación entre ingresos y egresos</p>
+      </div>
+      <div class="balance__net">
+        <span class="balance__net-label">Resultado neto</span>
+        <strong class="balance__net-value">{{ formatMoney(netTotal) }}</strong>
+      </div>
+    </header>
+
+    <div class="balance__body">
+      <div class="balance__bar" role="img" aria-label="Distribución ingresos vs egresos">
+        <span class="balance__bar-income"  [style.flex-basis.%]="incomeShare"></span>
+        <span class="balance__bar-expense" [style.flex-basis.%]="100 - incomeShare"></span>
+      </div>
+
+      <ul class="balance__legend">
+        <li>
+          <span class="dot dot--income"></span>
+          <div>
+            <span class="legend__label">Ingresos</span>
+            <strong class="legend__value">{{ formatMoney(incomeTotal) }}</strong>
+          </div>
+        </li>
+        <li>
+          <span class="dot dot--expense"></span>
+          <div>
+            <span class="legend__label">Egresos</span>
+            <strong class="legend__value">{{ formatMoney(expenseTotal) }}</strong>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="card">
+    <header class="card__head">
+      <span class="card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="16" rx="2"/>
+          <line x1="3"  y1="10" x2="21" y2="10"/>
+          <line x1="8"  y1="2"  x2="8"  y2="6"/>
+          <line x1="16" y1="2"  x2="16" y2="6"/>
+        </svg>
+      </span>
+      <div class="card__heading">
+        <h2 class="card__title">Movimientos</h2>
+        <p class="card__subtitle">Listado del libro diario</p>
+      </div>
+
+      <label class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="m21 21-4.3-4.3"/>
+        </svg>
+        <input type="search" placeholder="Buscar movimiento" [(ngModel)]="query" aria-label="Buscar movimientos" />
+      </label>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Filtrar movimientos">
+      <button type="button" role="tab" [attr.aria-selected]="view==='all'"     [class.is-active]="view==='all'"     (click)="view='all'">
+        Todos
+        <span class="tabs__count">{{ transactions.length }}</span>
+      </button>
+      <button type="button" role="tab" [attr.aria-selected]="view==='income'"  [class.is-active]="view==='income'"  (click)="view='income'">Ingresos</button>
+      <button type="button" role="tab" [attr.aria-selected]="view==='expense'" [class.is-active]="view==='expense'" (click)="view='expense'">Egresos</button>
+    </nav>
+
+    <div class="table-wrap">
+      <table class="data">
+        <thead>
+          <tr>
+            <th scope="col">Fecha</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Categoría</th>
+            <th scope="col">Cuenta</th>
+            <th scope="col">Estado</th>
+            <th scope="col" class="num">Monto</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let tx of filtered; trackBy: trackById">
+            <td>
+              <div class="date">
+                <span class="date__day">{{ tx.date | date:'dd MMM' }}</span>
+                <span class="date__year">{{ tx.date | date:'yyyy' }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="desc">
+                <span class="kind" [class]="'kind--' + tx.kind" aria-hidden="true">
+                  <svg *ngIf="tx.kind === 'income'"  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="7 17 17 7"/>
+                    <polyline points="9 7 17 7 17 15"/>
+                  </svg>
+                  <svg *ngIf="tx.kind === 'expense'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="7 7 17 17"/>
+                    <polyline points="17 9 17 17 9 17"/>
+                  </svg>
+                </span>
+                <div class="desc__text">
+                  <span class="desc__title">{{ tx.description }}</span>
+                  <span class="desc__id mono">{{ tx.id }}</span>
+                </div>
+              </div>
+            </td>
+            <td><span class="chip">{{ tx.category }}</span></td>
+            <td class="muted">{{ tx.account }}</td>
+            <td>
+              <span class="badge" [class]="'badge--' + tx.status">
+                <span class="badge__dot"></span>
+                {{ tx.status === 'reconciled' ? 'Conciliado' : 'Pendiente' }}
+              </span>
+            </td>
+            <td class="num mono"
+                [class.is-income]="tx.kind === 'income'"
+                [class.is-expense]="tx.kind === 'expense'">
+              {{ signed(tx) }}
+            </td>
+          </tr>
+
+          <tr *ngIf="filtered.length === 0">
+            <td colspan="6" class="empty">
+              <div class="empty__inner">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="4" y="3" width="16" height="18" rx="2"/>
+                  <line x1="8" y1="7"  x2="16" y2="7"/>
+                  <line x1="8" y1="11" x2="16" y2="11"/>
+                  <line x1="8" y1="15" x2="12" y2="15"/>
+                </svg>
+                <p>No hay movimientos para los filtros seleccionados.</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

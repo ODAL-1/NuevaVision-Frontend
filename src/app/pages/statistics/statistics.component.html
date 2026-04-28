@@ -1,0 +1,219 @@
+<section class="page" aria-labelledby="statistics-title" (click)="closeFilterMenu()">
+  <header class="page__head">
+    <div class="page__heading">
+      <nav class="crumb" aria-label="Breadcrumb">
+        <span>Inicio</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m9 18 6-6-6-6"/>
+        </svg>
+        <span class="is-active">Estadísticas</span>
+      </nav>
+
+      <h1 id="statistics-title" class="page__title">Estadísticas</h1>
+      <p class="page__subtitle">Analizá el rendimiento de tu negocio en el período seleccionado.</p>
+    </div>
+
+    <div class="page__actions">
+      <div class="range" role="tablist" aria-label="Rango de tiempo">
+        <button type="button" role="tab" [class.is-active]="timeRange==='day'"   (click)="onTimeRangeChange('day')">Hoy</button>
+        <button type="button" role="tab" [class.is-active]="timeRange==='week'"  (click)="onTimeRangeChange('week')">Semana</button>
+        <button type="button" role="tab" [class.is-active]="timeRange==='month'" (click)="onTimeRangeChange('month')">Mes</button>
+        <button type="button" role="tab" [class.is-active]="timeRange==='year'"  (click)="onTimeRangeChange('year')">Año</button>
+      </div>
+
+      <div class="filter" (click)="$event.stopPropagation()">
+        <button type="button" class="btn btn--ghost" (click)="toggleFilterMenu()" [attr.aria-expanded]="showFilterMenu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+          </svg>
+          <span>Filtros</span>
+          <span class="filter__chip" *ngIf="categoryFilter !== 'all'">1</span>
+        </button>
+
+        <div class="filter__menu" *ngIf="showFilterMenu">
+          <div class="filter__field">
+            <label for="category-filter">Categoría</label>
+            <select id="category-filter" [(ngModel)]="categoryFilter" (change)="applyFilters()">
+              <option value="all">Todas las categorías</option>
+              <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+            </select>
+          </div>
+          <div class="filter__actions">
+            <button type="button" class="link" (click)="resetFilters()">Restablecer filtros</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="kpis" aria-label="Resumen del período">
+    <article class="kpi">
+      <span class="kpi__icon kpi__icon--blue" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1"  x2="12" y2="23"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+      </span>
+      <span class="kpi__label">Ingresos totales</span>
+      <strong class="kpi__value">{{ formatCurrency(totalRevenue) }}</strong>
+      <span class="kpi__delta"
+            [class.is-up]="revenueComparison.percentChange > 0"
+            [class.is-down]="revenueComparison.percentChange < 0">
+        <svg *ngIf="revenueComparison.percentChange > 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="7 17 17 7"/>
+          <polyline points="9 7 17 7 17 15"/>
+        </svg>
+        <svg *ngIf="revenueComparison.percentChange < 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="7 7 17 17"/>
+          <polyline points="17 9 17 17 9 17"/>
+        </svg>
+        {{ formatPercentage(revenueComparison.percentChange) }}
+        <span class="kpi__hint">vs período anterior</span>
+      </span>
+    </article>
+
+    <article class="kpi">
+      <span class="kpi__icon kpi__icon--amber" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <line x1="3"  y1="6"  x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      </span>
+      <span class="kpi__label">Unidades vendidas</span>
+      <strong class="kpi__value">{{ totalUnitsSold }}</strong>
+      <span class="kpi__delta"
+            [class.is-up]="unitsSoldComparison.percentChange > 0"
+            [class.is-down]="unitsSoldComparison.percentChange < 0">
+        <svg *ngIf="unitsSoldComparison.percentChange > 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="7 17 17 7"/>
+          <polyline points="9 7 17 7 17 15"/>
+        </svg>
+        <svg *ngIf="unitsSoldComparison.percentChange < 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="7 7 17 17"/>
+          <polyline points="17 9 17 17 9 17"/>
+        </svg>
+        {{ formatPercentage(unitsSoldComparison.percentChange) }}
+        <span class="kpi__hint">vs período anterior</span>
+      </span>
+    </article>
+
+    <article class="kpi">
+      <span class="kpi__icon kpi__icon--violet" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11.24V7.5a2.5 2.5 0 0 1 5 0v4.74"/>
+          <path d="m9 12 .5 7.5a2 2 0 0 0 2 1.5h1a2 2 0 0 0 2-1.5L15 12"/>
+          <path d="M5 11h14"/>
+        </svg>
+      </span>
+      <span class="kpi__label">Clics totales</span>
+      <strong class="kpi__value">{{ totalClicks }}</strong>
+      <span class="kpi__delta"
+            [class.is-up]="clicksComparison.percentChange > 0"
+            [class.is-down]="clicksComparison.percentChange < 0">
+        <svg *ngIf="clicksComparison.percentChange > 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="7 17 17 7"/>
+          <polyline points="9 7 17 7 17 15"/>
+        </svg>
+        <svg *ngIf="clicksComparison.percentChange < 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="7 7 17 17"/>
+          <polyline points="17 9 17 17 9 17"/>
+        </svg>
+        {{ formatPercentage(clicksComparison.percentChange) }}
+        <span class="kpi__hint">vs período anterior</span>
+      </span>
+    </article>
+
+    <article class="kpi">
+      <span class="kpi__icon kpi__icon--green" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+      </span>
+      <span class="kpi__label">Tasa de conversión</span>
+      <strong class="kpi__value">{{ formatPercentage(averageConversionRate) }}</strong>
+      <span class="kpi__delta"
+            [class.is-up]="conversionRateComparison.percentChange > 0"
+            [class.is-down]="conversionRateComparison.percentChange < 0">
+        <svg *ngIf="conversionRateComparison.percentChange > 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="7 17 17 7"/>
+          <polyline points="9 7 17 7 17 15"/>
+        </svg>
+        <svg *ngIf="conversionRateComparison.percentChange < 0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="7 7 17 17"/>
+          <polyline points="17 9 17 17 9 17"/>
+        </svg>
+        {{ formatPercentage(conversionRateComparison.percentChange) }}
+        <span class="kpi__hint">vs período anterior</span>
+      </span>
+    </article>
+  </section>
+
+  <article class="card">
+    <header class="card__head">
+      <span class="card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="20" x2="12" y2="10"/>
+          <line x1="18" y1="20" x2="18" y2="4"/>
+          <line x1="6"  y1="20" x2="6"  y2="14"/>
+        </svg>
+      </span>
+      <div class="card__heading">
+        <h2 class="card__title">
+          Productos más vendidos
+          <span class="card__hint" *ngIf="categoryFilter !== 'all'">— {{ categoryFilter }}</span>
+        </h2>
+        <p class="card__subtitle">Top {{ Math.min(filteredProducts.length, 10) }} del período</p>
+      </div>
+    </header>
+
+    <div class="table-wrap">
+      <table class="data">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Producto</th>
+            <th scope="col">Categoría</th>
+            <th scope="col" class="num">Precio</th>
+            <th scope="col" class="num">Unidades</th>
+            <th scope="col" class="num">Ingresos</th>
+            <th scope="col">Participación</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of filteredProducts.slice(0, 10); let i = index">
+            <td class="rank">{{ i + 1 }}</td>
+            <td>
+              <div class="product">
+                <span class="product__sku mono">{{ product.id }}</span>
+                <span class="product__name">{{ product.name }}</span>
+              </div>
+            </td>
+            <td><span class="chip">{{ product.category }}</span></td>
+            <td class="num mono">{{ formatCurrency(product.price) }}</td>
+            <td class="num mono">{{ product.unitsSold }}</td>
+            <td class="num mono">{{ formatCurrency(product.revenue) }}</td>
+            <td>
+              <div class="bar">
+                <span class="bar__fill" [style.width.%]="getShare(product.revenue)"></span>
+              </div>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredProducts.length === 0">
+            <td colspan="7" class="empty">
+              <div class="empty__inner">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <line x1="12" y1="20" x2="12" y2="10"/>
+                  <line x1="18" y1="20" x2="18" y2="4"/>
+                  <line x1="6"  y1="20" x2="6"  y2="14"/>
+                </svg>
+                <p>No hay datos disponibles para los filtros seleccionados.</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

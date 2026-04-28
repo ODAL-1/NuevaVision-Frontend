@@ -1,0 +1,158 @@
+<section class="page" aria-labelledby="billing-title">
+  <header class="page__head">
+    <div class="page__heading">
+      <nav class="crumb" aria-label="Breadcrumb">
+        <span>Inicio</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m9 18 6-6-6-6"/>
+        </svg>
+        <span>Ventas</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="m9 18 6-6-6-6"/>
+        </svg>
+        <span class="is-active">Facturación</span>
+      </nav>
+
+      <h1 id="billing-title" class="page__title">Facturación</h1>
+      <p class="page__subtitle">Administrá facturas, pagos y cuentas por cobrar de tus clientes.</p>
+    </div>
+
+    <div class="page__actions">
+      <button type="button" class="btn btn--ghost">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        <span>Exportar</span>
+      </button>
+      <button type="button" class="btn btn--primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        <span>Nueva factura</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="kpis" aria-label="Resumen del período">
+    <article class="kpi" *ngFor="let k of kpis">
+      <span class="kpi__label">{{ k.label }}</span>
+      <strong class="kpi__value">{{ k.value }}</strong>
+      <div class="kpi__meta">
+        <span class="kpi__delta"
+              [class.is-up]="k.trend === 'up'"
+              [class.is-down]="k.trend === 'down'">
+          <svg *ngIf="k.trend === 'up'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="7 17 17 7"/>
+            <polyline points="9 7 17 7 17 15"/>
+          </svg>
+          <svg *ngIf="k.trend === 'down'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="7 7 17 17"/>
+            <polyline points="17 9 17 17 9 17"/>
+          </svg>
+          {{ k.delta }}
+        </span>
+        <span class="kpi__hint">{{ k.hint }}</span>
+      </div>
+    </article>
+  </section>
+
+  <article class="card">
+    <header class="card__head">
+      <span class="card__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="9" y1="13" x2="15" y2="13"/>
+          <line x1="9" y1="17" x2="13" y2="17"/>
+        </svg>
+      </span>
+      <div class="card__heading">
+        <h2 class="card__title">Listado de facturas</h2>
+        <p class="card__subtitle">Comprobantes emitidos y su estado de cobro</p>
+      </div>
+
+      <label class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="m21 21-4.3-4.3"/>
+        </svg>
+        <input type="search" placeholder="Buscar factura o cliente" [(ngModel)]="query" aria-label="Buscar facturas" />
+      </label>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Filtrar por estado">
+      <button type="button" role="tab" [attr.aria-selected]="filter==='all'"     [class.is-active]="filter==='all'"     (click)="filter='all'">
+        Todas
+        <span class="tabs__count">{{ invoices.length }}</span>
+      </button>
+      <button type="button" role="tab" [attr.aria-selected]="filter==='paid'"    [class.is-active]="filter==='paid'"    (click)="filter='paid'">Pagadas</button>
+      <button type="button" role="tab" [attr.aria-selected]="filter==='pending'" [class.is-active]="filter==='pending'" (click)="filter='pending'">Pendientes</button>
+      <button type="button" role="tab" [attr.aria-selected]="filter==='overdue'" [class.is-active]="filter==='overdue'" (click)="filter='overdue'">Vencidas</button>
+      <button type="button" role="tab" [attr.aria-selected]="filter==='draft'"   [class.is-active]="filter==='draft'"   (click)="filter='draft'">Borradores</button>
+    </nav>
+
+    <div class="table-wrap">
+      <table class="data">
+        <thead>
+          <tr>
+            <th scope="col">Factura</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Emisión</th>
+            <th scope="col">Vencimiento</th>
+            <th scope="col" class="num">Monto</th>
+            <th scope="col">Estado</th>
+            <th scope="col" aria-label="Acciones"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let inv of filtered; trackBy: trackByNumber">
+            <td><span class="mono">{{ inv.number }}</span></td>
+            <td>
+              <div class="client">
+                <span class="avatar" aria-hidden="true">{{ inv.client.charAt(0) }}</span>
+                <div class="client__info">
+                  <span class="client__name">{{ inv.client }}</span>
+                  <span class="client__email">{{ inv.email }}</span>
+                </div>
+              </div>
+            </td>
+            <td class="muted">{{ inv.issuedAt | date:'dd MMM yyyy' }}</td>
+            <td class="muted">{{ inv.dueAt | date:'dd MMM yyyy' }}</td>
+            <td class="num mono">{{ formatMoney(inv.amount) }}</td>
+            <td>
+              <span class="badge" [class]="'badge--' + inv.status">
+                <span class="badge__dot"></span>
+                {{ statusLabel(inv.status) }}
+              </span>
+            </td>
+            <td class="actions">
+              <button class="icon-btn" type="button" aria-label="Más acciones">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <circle cx="5"  cy="12" r="1.6"/>
+                  <circle cx="12" cy="12" r="1.6"/>
+                  <circle cx="19" cy="12" r="1.6"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="filtered.length === 0">
+            <td colspan="7" class="empty">
+              <div class="empty__inner">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="9" y1="13" x2="15" y2="13"/>
+                  <line x1="9" y1="17" x2="15" y2="17"/>
+                </svg>
+                <p>No hay facturas que coincidan con tu búsqueda.</p>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+</section>

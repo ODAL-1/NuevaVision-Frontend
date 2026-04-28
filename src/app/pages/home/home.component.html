@@ -1,0 +1,101 @@
+<section class="dashboard">
+  <header class="dashboard__header">
+    <div class="dashboard__heading">
+      <h1 class="dashboard__title">Dashboard</h1>
+      <p class="dashboard__subtitle">
+        En este panel se muestra el flujo de órdenes en tiempo real, desde el ingreso hasta la entrega.
+      </p>
+    </div>
+
+    <div class="dashboard__actions">
+      <div class="dashboard__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true">
+          <path d="M380-320q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l224 224q12 12 11.5 28T811-147q-12 12-28.5 12T754-147L530-371q-30 24-69 37.5T380-320Zm0-80q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+        </svg>
+        <input type="search" placeholder="Buscar cliente, referencia..." aria-label="Buscar órdenes" />
+      </div>
+
+      <button class="dashboard__cta" type="button" (click)="createOrder()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true">
+          <path d="M440-440H240q-17 0-28.5-11.5T200-480q0-17 11.5-28.5T240-520h200v-200q0-17 11.5-28.5T480-760q17 0 28.5 11.5T520-720v200h200q17 0 28.5 11.5T760-480q0 17-11.5 28.5T720-440H520v200q0 17-11.5 28.5T480-200q-17 0-28.5-11.5T440-240v-200Z" />
+        </svg>
+        <span>Crear orden</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="dashboard__metrics" role="list">
+    <article class="metric metric--blue" role="listitem">
+      <span class="metric__label">Ingresadas</span>
+      <span class="metric__value">{{ columns[0].orders.length }}</span>
+      <span class="metric__delta">+3 hoy</span>
+    </article>
+    <article class="metric metric--amber" role="listitem">
+      <span class="metric__label">En curso</span>
+      <span class="metric__value">{{ columns[1].orders.length }}</span>
+      <span class="metric__delta">+1 hoy</span>
+    </article>
+    <article class="metric metric--green" role="listitem">
+      <span class="metric__label">Finalizadas</span>
+      <span class="metric__value">{{ columns[2].orders.length }}</span>
+      <span class="metric__delta">+2 hoy</span>
+    </article>
+    <article class="metric metric--violet" role="listitem">
+      <span class="metric__label">Entregadas</span>
+      <span class="metric__value">{{ columns[3].orders.length }}</span>
+      <span class="metric__delta">Esta semana</span>
+    </article>
+  </div>
+
+  <div class="kanban" role="list">
+    <article
+      *ngFor="let column of columns; trackBy: trackByKey"
+      class="kanban__column"
+      [attr.data-status]="column.key"
+      role="listitem"
+    >
+      <header class="kanban__header">
+        <div class="kanban__title-group">
+          <span class="kanban__pill">{{ column.label }}</span>
+          <span class="kanban__count">{{ column.orders.length }}</span>
+        </div>
+
+        <button class="kanban__menu" type="button" (click)="openMenu(column)" [attr.aria-label]="'Acciones de ' + column.label">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true">
+            <path d="M480-200q-33 0-56.5-23.5T400-280q0-33 23.5-56.5T480-360q33 0 56.5 23.5T560-280q0 33-23.5 56.5T480-200Zm0-200q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-200q-33 0-56.5-23.5T400-680q0-33 23.5-56.5T480-760q33 0 56.5 23.5T560-680q0 33-23.5 56.5T480-600Z" />
+          </svg>
+        </button>
+      </header>
+
+      <p class="kanban__description">{{ column.description }}</p>
+
+      <ul class="kanban__list">
+        <li
+          *ngFor="let order of column.orders; trackBy: trackById"
+          class="kanban__card"
+          tabindex="0"
+        >
+          <div class="kanban__card-main">
+            <p class="kanban__card-name">{{ order.client }}</p>
+            <p class="kanban__card-ref">#{{ order.reference }}</p>
+          </div>
+          <div class="kanban__card-meta">
+            <span class="kanban__card-days">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true">
+                <path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm60-280-100-100v-180q0-17 11.5-28.5T480-760q17 0 28.5 11.5T520-720v160l80 80q12 12 12 28t-12 28q-12 12-28 12t-32-12Z" />
+              </svg>
+              {{ order.days }} {{ order.days === 1 ? 'día' : 'días' }}
+            </span>
+          </div>
+        </li>
+      </ul>
+
+      <button class="kanban__add" type="button" aria-label="Agregar orden a esta columna">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="currentColor" aria-hidden="true">
+          <path d="M440-440H240q-17 0-28.5-11.5T200-480q0-17 11.5-28.5T240-520h200v-200q0-17 11.5-28.5T480-760q17 0 28.5 11.5T520-720v200h200q17 0 28.5 11.5T760-480q0 17-11.5 28.5T720-440H520v200q0 17-11.5 28.5T480-200q-17 0-28.5-11.5T440-240v-200Z" />
+        </svg>
+        Agregar
+      </button>
+    </article>
+  </div>
+</section>
