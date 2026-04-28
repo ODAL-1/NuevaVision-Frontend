@@ -1,4 +1,4 @@
-# NuevaVision Frontend
+# Nueva Visión - Frontend
 
 Frontend de sistema de gestión para óptica, desarrollado con Angular.
 
