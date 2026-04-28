@@ -35,7 +35,7 @@ ng serve
 ```
 
 ```LOG-IN:
-User: Admin
+User: admin
 Pass: 1234
 ```
 
