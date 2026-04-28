@@ -34,6 +34,11 @@ npm install
 ng serve
 ```
 
+```LOG-IN:
+User: Admin
+Pass: 1234
+```
+
 
 • Autores:
 
