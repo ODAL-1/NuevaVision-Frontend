@@ -40,6 +40,6 @@ ng serve
 Alan García
 Junior Developer / IT Support
 
-• Contribuidores
+• Contribuidores:
 
 Bruno Chirico
