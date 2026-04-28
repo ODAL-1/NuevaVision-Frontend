@@ -1,6 +1,6 @@
 # Nueva Visión - Frontend
 
-Frontend de sistema de gestión para óptica, desarrollado con Angular.
+Frontend de sistema de gestión interna para óptica, desarrollado con Angular.
 
 ##  Descripción:
 
@@ -18,19 +18,27 @@ Aplicación web orientada a la administración de una óptica, incluyendo:
 - Angular
 - TypeScript
 - SCSS
+- RxJS
 
-## Features destacadas:
+##  Features destacadas:
 
 - Arquitectura modular (layout + pages)
 - Routing protegido (auth guard)
 - Interceptores HTTP
-- Manejo de estado básico con servicios
+- Manejo de estado con servicios
 
+##  Instalación local:
 
-
-
-## Instalación local:
-
-```bash
+``` bash
 npm install
 ng serve
+```
+
+
+Autores:
+
+Alan García
+Junior Developer / IT Support
+
+🤝 Contribuidores
+Bruno Chirico
