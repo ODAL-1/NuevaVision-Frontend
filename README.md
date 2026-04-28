@@ -42,10 +42,10 @@ Pass: 1234
 
 • Autores:
 
-Alan García
+Alan García - 
 Junior Developer / IT Support
 
 • Contribuidores:
 
-Bruno Chirico
-Backend Developer
+Bruno Chirico 
+- Backend Developer
