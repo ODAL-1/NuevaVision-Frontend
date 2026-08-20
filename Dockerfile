@@ -10,3 +10,4 @@ RUN npx ng build --configuration production
 FROM registry.access.redhat.com/ubi9/nginx-124
 COPY --from=builder /opt/app-root/src/dist/nueva-vision/browser /opt/app-root/src/
 CMD ["nginx", "-g", "daemon off;"]
+COPY nginx.conf /opt/app-root/etc/nginx.d/default.conf
